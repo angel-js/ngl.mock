@@ -61,16 +61,18 @@ angular.module('log.service.spec', [ 'log.service' ])
 });
 ```
 
-Concat your source files and your unit tests. Ensure **ngl.mock** is
-concatenated first
+Usage
+-----
 
-Run the bundle with your preferred test runner
+ 1. Concatenate your source files and your unit tests.
+ 2. Ensure **ngl.mock** is concatenated first
+ 3. Run the bundle with your preferred test runner
 
 Enjoy unit testing your angular modules!
 
-**ngl.mock** supports all angular DI idioms:
+**ngl.mock** supports the following angular DI idioms:
 
-  * arguments name by using `Function::toString`
+  * arguments name _(default)_
   * `$injector.get`
   * `[ 'foo', 'bar' function (foo, bar) { ... }]`
   * `(function (foo, bar) { ... }).$inject = [ 'foo', 'bar' ]`
