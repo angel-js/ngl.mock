@@ -38,7 +38,8 @@ angular.module('log', [])
 angular at all**
 
 ```js
-angular.module('log').test(function (inject) {
+angular.module('log.spec', [ 'log' ])
+.test(function (inject) {
   describe('log service', function () {
     var mocks = {
       logModel: []
