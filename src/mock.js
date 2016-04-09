@@ -1,6 +1,8 @@
 (function (expose) {
   'use strict';
 
+  var noop = function ();
+
   var getterSetter = function (model) {
     return function (key, value) {
       if (typeof value !== 'undefined') { model[key] = value; }
@@ -22,7 +24,8 @@
 
     return {
       factory: getterSetter(entry.factories),
-      directive: getterSetter(entry.directives)
+      directive: getterSetter(entry.directives),
+      config: noop
     };
   };
 
