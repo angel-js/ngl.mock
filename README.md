@@ -28,8 +28,8 @@ describe('module:log', function () {
   var module = angular.module('log');
 
   describe('factory:log', function () {
-    var mock = { model: [] };
-    var log = module.factory('log')(mock.model);
+    var model = [];
+    var log = module.factory('log')(model);
 
     it('should be a function', function () {
       expect(log).to.be.a('function');
@@ -38,7 +38,7 @@ describe('module:log', function () {
     it('should add messages', function () {
       var msg = 'foo';
       log(msg);
-      expect(mock.model[0]).to.be(msg);
+      expect(model[0]).to.be(msg);
     });
   });
 });
