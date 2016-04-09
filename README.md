@@ -66,7 +66,7 @@ describe('module:log', function () {
 });
 ```
 
-Usage
+Setup
 -----
 
  1. Concatenate your source files and your unit tests.
