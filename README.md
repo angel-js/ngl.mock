@@ -6,12 +6,6 @@ Angular 1.x mock for running unit tests under nodejs without mocking the DOM
 Usage
 -----
 
-**ngl.mock** mocks angular's module system so your scripts can use the mocked
-version to register its factories and directives and your unit tests can load
-them the same way since all methods provided by `module` are getter/setters
-
-For example, having module with some factories and directives
-
 ```js
 angular.module('log', [])
 
@@ -26,24 +20,8 @@ angular.module('log', [])
   };
 
   return log;
-})
-
-.directive('log', function (logModel) {
-  var controller = function ($scope) {
-    $scope.log = logModel;
-  };
-
-  var template = '<div ng-repeat="msg in log track by $index">{{ msg }}</div>';
-
-  return {
-    scope: true,
-    controller: controller,
-    template: template
-  };
 });
 ```
-
-Using **ngl.mock** you can write unit tests like the following
 
 ```js
 describe('module:log', function () {
@@ -66,8 +44,17 @@ describe('module:log', function () {
 });
 ```
 
-Setup
------
+How does it work?
+-----------------
+
+**ngl.mock** mocks angular's module system so your scripts can use the mocked
+version to register its factories and directives and your unit tests can load
+them the same way since all methods provided by `module` are getter/setters
+
+Install
+-------
+
+    bower install --save-dev ngl.mock
 
  1. Concatenate your source files and your unit tests.
  2. Ensure **ngl.mock** is concatenated first
