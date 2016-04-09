@@ -5,8 +5,9 @@
 
   var getterSetter = function (model) {
     return function (key, value) {
-      if (typeof value !== 'undefined') { model[key] = value; }
-      return model[key];
+      if (typeof value === 'undefined') { return model[key]; }
+      model[key] = value;
+      return this;
     };
   };
 
