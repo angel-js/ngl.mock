@@ -1,33 +1,32 @@
-var angular = (function (env) {
+(function (expose) {
   'use strict';
-  
-  var di = function (fn) {
-    // TODO
-  };
 
-  var factory = function (name, fn) {
-    // TODO
-  };
-
-  var directive = function (name, fn) {
-    // TODO
-  };
-
-  var describe = function (desc, fn) {
-    env.describe(desc, di(fn));
-  };
-
-  var module = function (name, deps) {
-    return {
-      factory: factory,
-      directive: directive,
-      describe: describe
+  var getterSetter = function (model) {
+    return function (key, value) {
+      if (typeof value !== 'undefined') { model[key] = value; }
+      return model[key];
     };
   };
 
-  return {
-    module: module
+  var registry = {};
+
+  var module = function (name) {
+    if (!registry[name]) {
+      registry[name] = {
+        factories: {},
+        directives: {}
+      };
+    }
+
+    var entry = registry[name];
+
+    return {
+      factory: getterSetter(entry.factories),
+      directive: getterSetter(entry.directives)
+    };
   };
-})({
-  describe: describe
+
+  expose('angular', { module: module });
+})(function (name, module) {
+  this[name] = module;
 });

@@ -3,14 +3,22 @@ ngl.mock
 
 Angular 1.x mock for running unit tests under nodejs without mocking the DOM
 
-Overview
---------
+Usage
+-----
+
+**ngl.mock** mocks angular's module system so your scripts can use the mocked
+version to register its factories and directives and your unit tests can load
+them the same way since all methods provided by `module` are getter/setters
+
+For example, having module with some factories and directives
 
 ```js
 angular.module('log', [])
+
 .factory('logModel', function () {
   return [];
 })
+
 .factory('log', function (logModel) {
   var log = function (msg) {
     if (typeof msg !== 'string') { msg = angular.toJson(msg, 2); }
@@ -19,6 +27,7 @@ angular.module('log', [])
 
   return log;
 })
+
 .directive('log', function (logModel) {
   var controller = function ($scope) {
     $scope.log = logModel;
@@ -34,18 +43,15 @@ angular.module('log', [])
 });
 ```
 
-**ngl.mock** lets you write your unit tests as an angular module **without using
-angular at all**
+Using **ngl.mock** you can write unit tests like the following
 
 ```js
-angular.module('log.spec', [ 'log' ])
-.test(function (inject) {
-  describe('log service', function () {
-    var mocks = {
-      logModel: []
-    };
+describe('module:log', function () {
+  var module = angular.module('log');
 
-    var log = inject.factory('log', mocks);
+  describe('factory:log', function () {
+    var mock = { model: [] };
+    var log = module.factory('log')(mock.model);
 
     it('should be a function', function () {
       expect(log).to.be.a('function');
@@ -54,29 +60,7 @@ angular.module('log.spec', [ 'log' ])
     it('should add messages', function () {
       var msg = 'foo';
       log(msg);
-      expect(mocks.logModel[0]).to.be(msg);
-    });
-  });
-
-  describe('log directive', function () {
-    var mocks = {
-      logModel: []
-    };
-
-    var log = inject.directive('log', mocks);
-
-    it('should have a controller function', function () {
-      expect(log).to.be.an('object');
-      expect(log.controller).to.be.a('function');
-    });
-
-    it('should expose messages', function () {
-      var ctrlMocks = {
-        $scope: {}
-      };
-
-      var controller = inject(log.controller, ctrlMocks);
-      expect(ctrlMocks.$scope.log).to.be(mocks.logModel);
+      expect(mock.model[0]).to.be(msg);
     });
   });
 });
@@ -90,10 +74,3 @@ Usage
  3. Run the bundle with your preferred test runner
 
 Enjoy unit testing your angular modules!
-
-**ngl.mock** supports the following angular DI idioms:
-
-  * arguments name _(default)_
-  * `$injector.get`
-  * `[ 'foo', 'bar' function (foo, bar) { ... }]`
-  * `(function (foo, bar) { ... }).$inject = [ 'foo', 'bar' ]`
