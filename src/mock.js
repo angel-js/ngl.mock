@@ -1,7 +1,7 @@
 (function (expose) {
   'use strict';
 
-  var noop = function ();
+  var noop = function () {};
 
   var getterSetter = function (model) {
     return function (key, value) {
