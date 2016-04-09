@@ -7,16 +7,16 @@ Usage
 -----
 
 ```js
-angular.module('log', [])
+angular.module('app.log', [])
 
-.factory('logModel', function () {
+.factory('appLogModel', function () {
   return [];
 })
 
-.factory('log', function (logModel) {
+.factory('appLog', function (appLogModel) {
   var log = function (msg) {
     if (typeof msg !== 'string') { msg = angular.toJson(msg, 2); }
-    logModel.push(msg);
+    appLogModel.push(msg);
   };
 
   return log;
@@ -24,12 +24,12 @@ angular.module('log', [])
 ```
 
 ```js
-describe('module:log', function () {
-  var module = angular.module('log');
+describe('app.log', function () {
+  var module = angular.module('app.log');
 
-  describe('factory:log', function () {
+  describe('appLog', function () {
     var model = [];
-    var log = module.factory('log')(model);
+    var log = module.factory('appLog')(model);
 
     it('should be a function', function () {
       expect(log).to.be.a('function');
