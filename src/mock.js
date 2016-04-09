@@ -1,7 +1,9 @@
 (function (expose) {
   'use strict';
 
-  var noop = function () {};
+  var chain = function () {
+    return this;
+  };
 
   var getterSetter = function (model) {
     return function (key, value) {
@@ -26,7 +28,7 @@
     return {
       factory: getterSetter(entry.factories),
       directive: getterSetter(entry.directives),
-      config: noop
+      config: chain
     };
   };
 
