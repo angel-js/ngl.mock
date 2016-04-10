@@ -1,15 +1,27 @@
 (function (expose) {
   'use strict';
 
-  var chain = function () {
-    return this;
+  var noop = function () {};
+
+  var chain = function (api) {
+    var chained = {};
+    var method = null;
+
+    for (method in api) {
+      chained[method] = function () {
+        var value = api[method].apply(null, arguments);
+        if (typeof value !== 'undefined') { return value; }
+        return chained;
+      };
+    }
+
+    return chained;
   };
 
   var getterSetter = function (model) {
     return function (key, value) {
       if (typeof value === 'undefined') { return model[key]; }
       model[key] = value;
-      return this;
     };
   };
 
@@ -25,11 +37,11 @@
 
     var entry = registry[name];
 
-    return {
+    return chain({
       factory: getterSetter(entry.factories),
       directive: getterSetter(entry.directives),
-      config: chain
-    };
+      config: noop
+    });
   };
 
   expose('angular', { module: module });
