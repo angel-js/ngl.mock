@@ -61,3 +61,18 @@ Install
  3. Run the bundle with your preferred test runner
 
 Enjoy unit testing your angular modules!
+
+API
+---
+
+### `angular.module(name)`
+
+Returns an `angular.module`-compatible API
+
+### `angular.reset()`
+
+**For internal use**
+
+Resets the internal module registry
+
+This is used in our unit test to start with a clean registry `beforeEach` test
