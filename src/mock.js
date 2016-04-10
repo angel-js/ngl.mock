@@ -45,6 +45,7 @@
   };
 
   expose('angular', { module: module });
-})(function (name, module) {
-  this[name] = module;
+})(function (name, api) {
+  if (module && module.exports) { module.exports = api; }
+  this[name] = api;
 });
