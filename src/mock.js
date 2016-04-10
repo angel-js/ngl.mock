@@ -4,15 +4,16 @@
   var noop = function () {};
 
   var iterateObject = function (object, fn) {
-    for (var attr in object) { fn(object[attr], attr); }
+    var attr = '';
+    for (attr in object) { fn(object[attr], attr); }
   };
 
   var chain = function (api) {
     var chained = {};
 
-    iterateObject(api, function (fn, name) {
-      chained[name] = function () {
-        var value = fn.apply(null, arguments);
+    iterateObject(api, function (prop, name) {
+      chained[name] = typeof prop !== 'function' ? prop : function () {
+        var value = prop.apply(null, arguments);
         if (typeof value !== 'undefined') { return value; }
         return chained;
       };
@@ -41,12 +42,25 @@
   };
 
   var module = function (name) {
+    if (!name) { throw 'missing mandatory module name'; }
     if (!registry[name]) { registry[name] = {}; }
 
     return chain({
+      provider: getterSetter(name, 'provider'),
       factory: getterSetter(name, 'factory'),
+      service: getterSetter(name, 'service'),
+      value: getterSetter(name, 'value'),
+      constant: getterSetter(name, 'constant'),
+      decorator: getterSetter(name, 'decorator'),
+      animation: getterSetter(name, 'animation'),
+      filter: getterSetter(name, 'filter'),
+      controller: getterSetter(name, 'controller'),
       directive: getterSetter(name, 'directive'),
-      config: noop
+      component: getterSetter(name, 'component'),
+      config: noop,
+      run: noop,
+      requires: [],
+      name: name
     });
   };
 
