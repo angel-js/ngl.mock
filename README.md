@@ -35,29 +35,33 @@ angular.module('log', [])
 
 Let's write our unit tests using `ng-mock`
 
+_([mocha][2] and [expect.js][3] used in the example)_
+
 **log.spec.js**
 
-_`mocha` and `expect.js` used in the example_
-
 Load `ng-mock` and the module to be tested
-
-```js
-var angular = require('ng-mock');
-require('log.js');
-```
 
 **`ng-mock` should me loaded first since it exposes the `angular` global
 used by the tested module**
 
-The tests...
+```js
+var ngMock = require('ng-mock');
+require('log.js');
+```
+
+The tests ...
 
 ```js
 describe('log', function () {
-  var module = angular.module('log');
+  var logModule = ngMock.module('log');
+
+  it('should expose a log service', function () {
+    expect(logModule.factory('log')).to.be.a('function');
+  });
 
   describe('log', function () {
-    var model = [];
-    var log = module.factory('log')(model);
+    var cache = [];
+    var log = logModule.factory('log')(cache);
 
     it('should be a function', function () {
       expect(log).to.be.a('function');
@@ -66,7 +70,7 @@ describe('log', function () {
     it('should add messages', function () {
       var msg = 'foo';
       log(msg);
-      expect(model[0]).to.be(msg);
+      expect(cache[0]).to.be(msg);
     });
   });
 });
@@ -104,3 +108,5 @@ References
   * [angular.module API][1]
 
 [1]: https://docs.angularjs.org/api/ng/type/angular.Module
+[2]: https://mochajs.org/
+[3]: https://github.com/Automattic/expect.js
