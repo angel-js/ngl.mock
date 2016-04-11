@@ -75,7 +75,7 @@ describe('log', function () {
 
 **ng-mock** mocks angular's module system so your scripts can use the mocked
 version to register its factories and directives and your unit tests can load
-them the same way since all methods provided by `module` are getter/setters
+them the same way **since all methods provided by `module` are getter/setters**
 
 Install
 -------
