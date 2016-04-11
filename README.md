@@ -41,7 +41,7 @@ _([mocha][2] and [expect.js][3] used in the example)_
 
 Load `ng-mock` and the module to be tested
 
-**`ng-mock` should me loaded first since it exposes the `angular` global
+**`ng-mock` should be loaded first since it exposes the `angular` global
 used by the tested module**
 
 ```js
