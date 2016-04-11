@@ -1,7 +1,7 @@
 (function (expose) {
   'use strict';
 
-  var chain = require('./util/chain');
+  var chain = require('./helper/chain');
   var noop = function () {};
 
   var registry = {};
