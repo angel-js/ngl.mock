@@ -39,18 +39,19 @@ Let's write our unit tests using `ng-mock`
 
 _`mocha` and `expect.js` used in the example_
 
+Load `ng-mock` and the module to be tested
+
 ```js
-var expect = require('expect.js');
-
-// load ng-mock
 var angular = require('ng-mock');
-
-// load the module to be tested
-//
-// ng-mock should me loaded first since it exposes the `angular` global
-// used by the tested module
 require('log.js');
+```
 
+**`ng-mock` should me loaded first since it exposes the `angular` global
+used by the tested module**
+
+The tests...
+
+```js
 describe('log', function () {
   var module = angular.module('log');
 
