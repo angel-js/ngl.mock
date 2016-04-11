@@ -90,11 +90,11 @@ Install
 API
 ---
 
-### `angular.module(name)`
+### `module(name)`
 
 Returns an [angular.module][1]-compatible API
 
-### `angular.reset()`
+### `reset()`
 
 **For internal use**
 
