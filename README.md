@@ -1,35 +1,62 @@
-ngl.mock
-========
+ng-mock
+=======
 
-Angular 1.x mock for running unit tests under nodejs without mocking the DOM
+Angular unit testing made easy
+
+### Featuring
+
+  * run unit tests under nodejs
+  * no DOM mocks required
+  * angular.js not needed
 
 Usage
 -----
 
-```js
-angular.module('app.log', [])
+Suppose you have a `log` service like the following you want to test
 
-.factory('appLogModel', function () {
+**log.js**
+
+```js
+angular.module('log', [])
+
+.factory('logCache', function () {
   return [];
 })
 
-.factory('appLog', function (appLogModel) {
+.factory('log', function (logCache) {
   var log = function (msg) {
     if (typeof msg !== 'string') { msg = angular.toJson(msg, 2); }
-    appLogModel.push(msg);
+    logCache.push(msg);
   };
 
   return log;
 });
 ```
 
-```js
-describe('app.log', function () {
-  var module = angular.module('app.log');
+Let's write our unit tests using `ng-mock`
 
-  describe('appLog', function () {
+**log.spec.js**
+
+_`mocha` and `expect.js` used in the example_
+
+```js
+var expect = require('expect.js');
+
+// load ng-mock
+var angular = require('ng-mock');
+
+// load the module to be tested
+//
+// ng-mock should me loaded first since it exposes the `angular` global
+// used by the tested module
+require('log.js');
+
+describe('log', function () {
+  var module = angular.module('log');
+
+  describe('log', function () {
     var model = [];
-    var log = module.factory('appLog')(model);
+    var log = module.factory('log')(model);
 
     it('should be a function', function () {
       expect(log).to.be.a('function');
@@ -44,30 +71,23 @@ describe('app.log', function () {
 });
 ```
 
-How does it work?
------------------
+### How does it work?
 
-**ngl.mock** mocks angular's module system so your scripts can use the mocked
+**ng-mock** mocks angular's module system so your scripts can use the mocked
 version to register its factories and directives and your unit tests can load
 them the same way since all methods provided by `module` are getter/setters
 
 Install
 -------
 
-    bower install --save-dev ngl.mock
-
- 1. Concatenate your source files and your unit tests.
- 2. Ensure **ngl.mock** is concatenated first
- 3. Run the bundle with your preferred test runner
-
-Enjoy unit testing your angular modules!
+    npm install --save-dev ng-mock
 
 API
 ---
 
 ### `angular.module(name)`
 
-Returns an `angular.module`-compatible API
+Returns an [angular.module][1]-compatible API
 
 ### `angular.reset()`
 
@@ -76,3 +96,10 @@ Returns an `angular.module`-compatible API
 Resets the internal module registry
 
 This is used in our unit test to start with a clean registry `beforeEach` test
+
+References
+----------
+
+  * [angular.module API][1]
+
+[1]: https://docs.angularjs.org/api/ng/type/angular.Module

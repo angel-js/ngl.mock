@@ -1,7 +1,7 @@
 'use strict';
 
 var expect = require('expect.js');
-var angular = require('../src/mock');
+var angular = require('../src/ng-mock');
 
 describe('angular', function () {
   it('should be exposed as both global and node module', function () {
