@@ -4,6 +4,10 @@ var expect = require('expect.js');
 var angular = require('../src/mock');
 
 describe('angular', function () {
+  it('should be exposed as both global and node module', function () {
+    expect(angular).to.be(global.angular);
+  });
+
   it('should expose an object', function () {
     expect(angular).to.be.an('object');
   });

@@ -1,26 +1,8 @@
 (function (expose) {
   'use strict';
 
+  var chain = require('./chain');
   var noop = function () {};
-
-  var iterateObject = function (object, fn) {
-    var attr = '';
-    for (attr in object) { fn(object[attr], attr); }
-  };
-
-  var chain = function (api) {
-    var chained = {};
-
-    iterateObject(api, function (prop, name) {
-      chained[name] = typeof prop !== 'function' ? prop : function () {
-        var value = prop.apply(null, arguments);
-        if (typeof value !== 'undefined') { return value; }
-        return chained;
-      };
-    });
-
-    return chained;
-  };
 
   var registry = {};
 
@@ -69,6 +51,6 @@
     module: module
   });
 })(function (name, api) {
-  if (module && module.exports) { module.exports = api; }
-  this[name] = api;
+  module.exports = api;
+  global[name] = api;
 });
