@@ -82,6 +82,100 @@ describe('log', function () {
 version to register its factories and directives and your unit tests can load
 them the same way **since all methods provided by `module` are getter/setters**
 
+### Use our DI helper for seamless mock injection
+
+Angular lets you declare provider dependencies in 3 different ways:
+
+_from: [angular DI](https://docs.angularjs.org/guide/di)_
+
+  * Using the inline array annotation (preferred)
+  * Using the $inject property annotation
+  * Implicitly from the function parameter names (has caveats)
+
+```js
+var module = angular.module('foo', []);
+
+// inline array annotation
+module.factory('bar', ['qux', function (qux) { ... }]);
+
+// $inject property annotation
+var bar = function (qux) { ... };
+bar.$inject = ['qux'];
+module.factory('bar', bar);
+
+// function parameter names
+module.factory('bar', function (qux) { ... });
+```
+
+Also, the injection can be in the form of `$injector.get`
+
+```js
+angular.module('foo')
+.factory('bar', function ($injector) {
+  var qux = $injector.get('qux');
+});
+```
+
+Which in turn can also be injected with the 3 annotation methods described above
+
+```js
+angular.module('foo')
+.factory('bar', ['$injector', function ($injector) {
+  var qux = $injector.get('qux');
+}]);
+```
+
+Since **ng-mock**'s `module` implementation returns basically a collection of
+getter/setters, having to deal with this assortment of annotation interfaces can
+be cumbersome
+
+**Ugly unit tests without using the DI helper**
+
+```js
+describe('bar', function () {
+  // get the bar factory function
+  var barFactory = ngMock.module('foo').factory('bar');
+
+  // suppose you have used inline array annotation style:
+  // the function to test is the last array item
+  var bar = barFactory[barFactory.length - 1];
+
+  // dependencies we want to mock
+  var mocks = {
+    qux: function quxMock () { ... }
+  };
+
+  // suppose you have used `$injector.get`:
+  // you will need to provide a mock for it!
+
+  var get = function (dependency) {
+    return mocks[dependency];
+  };
+
+  var $injector = { get: get };
+  var bar = barFactory($injector);
+
+  // your test starts here :(
+  it('should be a function', function () {
+    expect(bar).to.be.a('function');
+  });
+});
+```
+
+**Shinny unit tests using the DI helper**
+
+```js
+describe('bar', function () {
+  // get the bar factory function
+  var barFactory = ngMock.module('foo').factory('bar');
+
+  // done!
+  var bar = ngMock.di(barFactory, {
+    qux: function quxMock () { ... }
+  });
+});
+```
+
 Install
 -------
 
@@ -90,17 +184,19 @@ Install
 API
 ---
 
-### `module(name)`
-
-Returns an [angular.module][1]-compatible API
-
 ### `reset()`
-
-**For internal use**
 
 Resets the internal module registry
 
 This is used in our unit test to start with a clean registry `beforeEach` test
+
+### `module(name)`
+
+Returns an [angular.module][1]-compatible API
+
+### `di(injectable, injections)`
+
+DI helper
 
 References
 ----------
