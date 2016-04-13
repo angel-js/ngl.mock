@@ -82,7 +82,7 @@ describe('log', function () {
 version to register its factories and directives and your unit tests can load
 them the same way **since all methods provided by `module` are getter/setters**
 
-### Use our DI helper for seamless mock injection
+### Use the DI helper for seamless mock injection
 
 Angular lets you declare provider dependencies in 3 different ways:
 
@@ -107,7 +107,7 @@ module.factory('bar', bar);
 module.factory('bar', function (qux) { ... });
 ```
 
-Also, the injection can be in the form of `$injector.get`
+Also, the injection can be done using `$injector.get`
 
 ```js
 angular.module('foo')
@@ -133,11 +133,11 @@ be cumbersome
 
 ```js
 describe('bar', function () {
-  // get the bar factory function
+  // get the `bar` factory function
   var barFactory = ngMock.module('foo').factory('bar');
 
   // suppose you have used inline array annotation style:
-  // the function to test is the last array item
+  // the function to be tested is the last array item
   var bar = barFactory[barFactory.length - 1];
 
   // dependencies we want to mock
