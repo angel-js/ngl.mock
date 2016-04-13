@@ -136,7 +136,7 @@ describe('bar', function () {
   // get the `bar` factory function
   var barFactory = ngMock.module('foo').factory('bar');
 
-  // suppose you have used inline array annotation style:
+  // suppose we have used inline array annotation style:
   // the function to be tested is the last array item
   var bar = barFactory[barFactory.length - 1];
 
@@ -145,8 +145,8 @@ describe('bar', function () {
     qux: function quxMock () { ... }
   };
 
-  // suppose you have used `$injector.get`:
-  // you will need to provide a mock for it!
+  // suppose we have used `$injector.get`:
+  // we need to provide a mock for it
 
   var get = function (dependency) {
     return mocks[dependency];
@@ -155,7 +155,7 @@ describe('bar', function () {
   var $injector = { get: get };
   var bar = barFactory($injector);
 
-  // your test starts here :(
+  // we are ready to write the unit tests
   it('should be a function', function () {
     expect(bar).to.be.a('function');
   });
@@ -169,9 +169,14 @@ describe('bar', function () {
   // get the bar factory function
   var barFactory = ngMock.module('foo').factory('bar');
 
-  // done!
+  // let `di` to inject the dependencies for you
   var bar = ngMock.di(barFactory, {
     qux: function quxMock () { ... }
+  });
+
+  // we are ready to write the unit tests
+  it('should be a function', function () {
+    expect(bar).to.be.a('function');
   });
 });
 ```
