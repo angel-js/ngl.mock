@@ -1,6 +1,6 @@
 {
   "name": "ng-mock",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Angular unit testing made easy",
   "main": "src/ng-mock.js",
   "devDependencies": {
