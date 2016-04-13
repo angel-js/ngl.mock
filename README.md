@@ -169,7 +169,7 @@ describe('bar', function () {
   // get the bar factory function
   var barFactory = ngMock.module('foo').factory('bar');
 
-  // let `di` to inject the dependencies for you
+  // `di` injects the dependencies for us
   var bar = ngMock.di(barFactory, {
     qux: function quxMock () { ... }
   });
