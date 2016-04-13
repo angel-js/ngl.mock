@@ -112,46 +112,70 @@ describe('registry', function () {
       });
     });
 
-    describe('provider', function () {
-      it('should require a name param', function () {
-        var provider = registry.module('foo').provider;
-        provider('bar', true);
+    /**
+     * Since all module methods share the same implementation,
+     * we can abstract the test suite used
+     */
 
-        expect(provider).to.throwException(function (exception) {
-          expect(exception).to.be('missing mandatory provider name');
+    var moduleMethodTestSuite = function (method) {
+      return function () {
+        it('should require a name param', function () {
+          var getterSetter = registry.module('foo')[method];
+          getterSetter('bar', true);
+
+          expect(getterSetter).to.throwException(function (exception) {
+            expect(exception).to.be('missing mandatory ' + method + ' name');
+          });
+
+          expect(getterSetter).withArgs('bar').to.not.throwException();
         });
 
-        expect(provider).withArgs('bar').to.not.throwException();
-      });
+        it('should act as getter/setter', function () {
+          var getterSetter = registry.module('foo')[method];
 
-      it('should act as getter/setter', function () {
-        var provider = registry.module('foo').provider;
+          var num = 123;
+          var str = 'abc';
+          var fn = function () {};
 
-        var num = 123;
-        var str = 'abc';
-        var fn = function () {};
+          getterSetter('bar', num);
+          expect(getterSetter('bar')).to.be(num);
 
-        provider('bar', num);
-        expect(provider('bar')).to.be(num);
+          getterSetter('bar', str);
+          expect(getterSetter('bar')).to.be(str);
 
-        provider('bar', str);
-        expect(provider('bar')).to.be(str);
-
-        provider('bar', fn);
-        expect(provider('bar')).to.be(fn);
-      });
-
-      it('should require a set before a get', function () {
-        var provider = registry.module('foo').provider;
-
-        expect(provider).withArgs('bar')
-        .to.throwException(function (exception) {
-          expect(exception).to.be('provider not defined: bar');
+          getterSetter('bar', fn);
+          expect(getterSetter('bar')).to.be(fn);
         });
 
-        provider('bar', true);
-        expect(provider).withArgs('bar').to.not.throwException();
-      });
-    });
+        it('should require a set before a get', function () {
+          var getterSetter = registry.module('foo')[method];
+
+          expect(getterSetter).withArgs('bar')
+          .to.throwException(function (exception) {
+            expect(exception).to.be(method + ' not defined: bar');
+          });
+
+          getterSetter('bar', true);
+          expect(getterSetter).withArgs('bar').to.not.throwException();
+        });
+
+        it('should be chainable when used as a setter', function () {
+          var module = registry.module('foo');
+          expect(module[method]('bar', true)).to.be(module);
+        });
+      };
+    };
+
+    describe('provider', moduleMethodTestSuite('provider'));
+    describe('factory', moduleMethodTestSuite('factory'));
+    describe('service', moduleMethodTestSuite('service'));
+    describe('value', moduleMethodTestSuite('value'));
+    describe('constant', moduleMethodTestSuite('constant'));
+    describe('decorator', moduleMethodTestSuite('decorator'));
+    describe('animation', moduleMethodTestSuite('animation'));
+    describe('filter', moduleMethodTestSuite('filter'));
+    describe('controller', moduleMethodTestSuite('controller'));
+    describe('directive', moduleMethodTestSuite('directive'));
+    describe('component', moduleMethodTestSuite('component'));
   });
 });
