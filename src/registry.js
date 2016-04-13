@@ -9,16 +9,25 @@ var reset = function () {
   registry = {};
 };
 
-var getterSetter = function (module, collection) {
+var getterSetter = function (module, category) {
   return function (key, value) {
     var entry = registry[module];
     if (!entry) { throw 'module ' + module + ' is not available'; }
+    if (!key) { throw 'missing mandatory ' + category + ' name'; }
 
-    if (!entry[collection]) { entry[collection] = {}; }
-    var model = entry[collection];
+    if (!entry[category]) { entry[category] = {}; }
+    var model = entry[category];
 
-    if (typeof value === 'undefined') { return model[key]; }
-    model[key] = value;
+    if (typeof value !== 'undefined') {
+      model[key] = value;
+      return;
+    }
+
+    if (typeof model[key] === 'undefined') {
+      throw category + ' not defined: ' + key;
+    }
+
+    return model[key];
   };
 };
 
