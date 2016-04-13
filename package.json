@@ -19,9 +19,9 @@
     "test": "gulp test",
     "build": "gulp build",
     "precommit": "npm test",
-    "patch": "mversion patch -m -n",
-    "minor": "mversion minor -m -n",
-    "major": "mversion major -m -n"
+    "patch": "mversion patch -m '%s' -n",
+    "minor": "mversion minor -m '%s' -n",
+    "major": "mversion major -m '%S' -n"
   },
   "repository": {
     "type": "git",
