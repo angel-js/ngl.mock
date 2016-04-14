@@ -41,7 +41,7 @@ describe('registry', function () {
       expect(registry.module).withArgs('foo').to.not.throwException();
     });
 
-    it('should return an `angular.Module`-compatible api', function () {
+    it('should return an object', function () {
       expect(registry.module('foo')).to.be.an('object');
     });
 
@@ -103,79 +103,160 @@ describe('registry', function () {
         expect(registry.module('foo').run).to.be.a('function');
       });
 
-      it('should expose a `requires` array', function () {
-        expect(registry.module('foo').requires).to.be.an('array');
+      it('should expose a `requires` empty array', function () {
+        var module = registry.module('foo');
+        expect(module.requires).to.be.an('array');
+        expect(module.requires.length).to.be(0);
       });
 
       it('should expose a `name` string with the module name', function () {
         expect(registry.module('foo').name).to.be('foo');
       });
-    });
 
-    /**
-     * Since all module methods share the same implementation,
-     * we can abstract the test suite used
-     */
-
-    var moduleMethodTestSuite = function (method) {
-      return function () {
-        it('should require a name param', function () {
-          var getterSetter = registry.module('foo')[method];
-          getterSetter('bar', true);
-
-          expect(getterSetter).to.throwException(function (exception) {
-            expect(exception).to.be('missing mandatory ' + method + ' name');
-          });
-
-          expect(getterSetter).withArgs('bar').to.not.throwException();
-        });
-
-        it('should act as getter/setter', function () {
-          var getterSetter = registry.module('foo')[method];
-
-          var num = 123;
-          var str = 'abc';
-          var fn = function () {};
-
-          getterSetter('bar', num);
-          expect(getterSetter('bar')).to.be(num);
-
-          getterSetter('bar', str);
-          expect(getterSetter('bar')).to.be(str);
-
-          getterSetter('bar', fn);
-          expect(getterSetter('bar')).to.be(fn);
-        });
-
-        it('should require a set before a get', function () {
-          var getterSetter = registry.module('foo')[method];
-
-          expect(getterSetter).withArgs('bar')
-          .to.throwException(function (exception) {
-            expect(exception).to.be(method + ' not defined: bar');
-          });
-
-          getterSetter('bar', true);
-          expect(getterSetter).withArgs('bar').to.not.throwException();
-        });
-
-        it('should be chainable when used as a setter', function () {
+      describe('getter/setter methods', function () {
+        it('should prevent collisions with each other', function () {
           var module = registry.module('foo');
-          expect(module[method]('bar', true)).to.be(module);
-        });
-      };
-    };
 
-    describe('provider', moduleMethodTestSuite('provider'));
-    describe('factory', moduleMethodTestSuite('factory'));
-    describe('service', moduleMethodTestSuite('service'));
-    describe('value', moduleMethodTestSuite('value'));
-    describe('constant', moduleMethodTestSuite('constant'));
-    describe('decorator', moduleMethodTestSuite('decorator'));
-    describe('animation', moduleMethodTestSuite('animation'));
-    describe('filter', moduleMethodTestSuite('filter'));
-    describe('controller', moduleMethodTestSuite('controller'));
-    describe('directive', moduleMethodTestSuite('directive'));
-    describe('component', moduleMethodTestSuite('component'));
+          var provider = {};
+          var factory = {};
+          var service = {};
+          var value = {};
+          var constant = {};
+          var decorator = {};
+          var animation = {};
+          var filter = {};
+          var controller = {};
+          var directive = {};
+          var component = {};
+
+          module
+            .provider('bar', provider)
+            .factory('bar', factory)
+            .service('bar', service)
+            .value('bar', value)
+            .constant('bar', constant)
+            .decorator('bar', decorator)
+            .animation('bar', animation)
+            .filter('bar', filter)
+            .controller('bar', controller)
+            .directive('bar', directive)
+            .component('bar', component);
+
+          expect(module.provider('bar')).to.be(provider);
+          expect(module.factory('bar')).to.be(factory);
+          expect(module.service('bar')).to.be(service);
+          expect(module.value('bar')).to.be(value);
+          expect(module.constant('bar')).to.be(constant);
+          expect(module.decorator('bar')).to.be(decorator);
+          expect(module.animation('bar')).to.be(animation);
+          expect(module.filter('bar')).to.be(filter);
+          expect(module.controller('bar')).to.be(controller);
+          expect(module.directive('bar')).to.be(directive);
+          expect(module.component('bar')).to.be(component);
+        });
+
+        /**
+         * Since all module methods share the same implementation,
+         * we can abstract the tests used with them
+         */
+
+        var testModuleMethod = function (method) {
+          return function () {
+            it('should require a name param', function () {
+              var getterSetter = registry.module('foo')[method];
+              getterSetter('bar', true);
+
+              expect(getterSetter).to.throwException(function (exception) {
+                expect(exception).to.be('missing mandatory ' + method + ' name');
+              });
+
+              expect(getterSetter).withArgs('bar').to.not.throwException();
+            });
+
+            it('should be a getter/setter', function () {
+              var getterSetter = registry.module('foo')[method];
+              var bar = {};
+              getterSetter('bar', bar);
+              expect(getterSetter('bar')).to.be(bar);
+            });
+
+            it('should require a set before a get', function () {
+              var getterSetter = registry.module('foo')[method];
+
+              expect(getterSetter).withArgs('bar')
+              .to.throwException(function (exception) {
+                expect(exception).to.be(method + ' not defined: bar');
+              });
+
+              getterSetter('bar', true);
+              expect(getterSetter).withArgs('bar').to.not.throwException();
+            });
+
+            it('should prevent collisions with different names', function () {
+              var getterSetter = registry.module('foo')[method];
+
+              var num = 123;
+              var str = 'abc';
+              var fn = function () {};
+
+              getterSetter('num', num);
+              getterSetter('str', str);
+              getterSetter('fn', fn);
+
+              expect(getterSetter('num')).to.be(num);
+              expect(getterSetter('str')).to.be(str);
+              expect(getterSetter('fn')).to.be(fn);
+            });
+
+            it('should prevent collisions across modules', function () {
+              var foo = registry.module('foo');
+              var bar = registry.module('bar');
+
+              foo[method]('qux', foo);
+              bar[method]('qux', bar);
+
+              expect(foo[method]('qux')).not.to.be(bar[method]('qux'));
+              expect(foo[method]('qux')).to.be(foo);
+              expect(bar[method]('qux')).to.be(bar);
+            });
+
+            it('should be chainable when used as a setter', function () {
+              var module = registry.module('foo');
+              expect(module[method]('bar', true)).to.be(module);
+            });
+          };
+        };
+
+        describe('provider', testModuleMethod('provider'));
+        describe('factory', testModuleMethod('factory'));
+        describe('service', testModuleMethod('service'));
+        describe('value', testModuleMethod('value'));
+        describe('constant', testModuleMethod('constant'));
+        describe('decorator', testModuleMethod('decorator'));
+        describe('animation', testModuleMethod('animation'));
+        describe('filter', testModuleMethod('filter'));
+        describe('controller', testModuleMethod('controller'));
+        describe('directive', testModuleMethod('directive'));
+        describe('component', testModuleMethod('component'));
+      });
+
+      describe('config', function () {
+        it('should be a chainable noop method', function () {
+          var module = registry.module('foo');
+          expect(module.config()).to.be(module);
+          expect(module.config('bar', true)).to.be(module);
+          expect(module.config('bar')).to.be(module);
+        });
+      });
+
+      describe('run', function () {
+        it('should be a chainable noop method', function () {
+          var module = registry.module('foo');
+          expect(module.run()).to.be(module);
+          expect(module.run('bar', true)).to.be(module);
+          expect(module.run('bar')).to.be(module);
+        });
+      });
+    });
   });
 });
