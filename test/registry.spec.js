@@ -156,73 +156,73 @@ describe('registry', function () {
         });
 
         /**
-         * Since all module methods share the same implementation,
-         * we can abstract the tests used with them
+         * Since all methods from `registry.module` share the same
+         * implementation, we can abstract the tests used with them
          */
 
-        var testModuleMethod = function (method) {
+        var testModuleMethod = function (name) {
           return function () {
             it('should require a name param', function () {
-              var getterSetter = registry.module('foo')[method];
-              getterSetter('bar', true);
+              var method = registry.module('foo')[name];
+              method('bar', true);
 
-              expect(getterSetter).to.throwException(function (exception) {
-                expect(exception).to.be('missing mandatory ' + method + ' name');
+              expect(method).to.throwException(function (exception) {
+                expect(exception).to.be('missing mandatory ' + name + ' name');
               });
 
-              expect(getterSetter).withArgs('bar').to.not.throwException();
+              expect(method).withArgs('bar').to.not.throwException();
             });
 
             it('should be a getter/setter', function () {
-              var getterSetter = registry.module('foo')[method];
+              var method = registry.module('foo')[name];
               var bar = {};
-              getterSetter('bar', bar);
-              expect(getterSetter('bar')).to.be(bar);
+              method('bar', bar);
+              expect(method('bar')).to.be(bar);
             });
 
             it('should require a set before a get', function () {
-              var getterSetter = registry.module('foo')[method];
+              var method = registry.module('foo')[name];
 
-              expect(getterSetter).withArgs('bar')
+              expect(method).withArgs('bar')
               .to.throwException(function (exception) {
-                expect(exception).to.be(method + ' not defined: bar');
+                expect(exception).to.be(name + ' not defined: bar');
               });
 
-              getterSetter('bar', true);
-              expect(getterSetter).withArgs('bar').to.not.throwException();
+              method('bar', true);
+              expect(method).withArgs('bar').to.not.throwException();
             });
 
             it('should prevent collisions with different names', function () {
-              var getterSetter = registry.module('foo')[method];
+              var method = registry.module('foo')[name];
 
               var num = 123;
               var str = 'abc';
               var fn = function () {};
 
-              getterSetter('num', num);
-              getterSetter('str', str);
-              getterSetter('fn', fn);
+              method('num', num);
+              method('str', str);
+              method('fn', fn);
 
-              expect(getterSetter('num')).to.be(num);
-              expect(getterSetter('str')).to.be(str);
-              expect(getterSetter('fn')).to.be(fn);
+              expect(method('num')).to.be(num);
+              expect(method('str')).to.be(str);
+              expect(method('fn')).to.be(fn);
             });
 
             it('should prevent collisions across modules', function () {
               var foo = registry.module('foo');
               var bar = registry.module('bar');
 
-              foo[method]('qux', foo);
-              bar[method]('qux', bar);
+              foo[name]('qux', foo);
+              bar[name]('qux', bar);
 
-              expect(foo[method]('qux')).not.to.be(bar[method]('qux'));
-              expect(foo[method]('qux')).to.be(foo);
-              expect(bar[method]('qux')).to.be(bar);
+              expect(foo[name]('qux')).not.to.be(bar[name]('qux'));
+              expect(foo[name]('qux')).to.be(foo);
+              expect(bar[name]('qux')).to.be(bar);
             });
 
             it('should be chainable when used as a setter', function () {
               var module = registry.module('foo');
-              expect(module[method]('bar', true)).to.be(module);
+              expect(module[name]('bar', true)).to.be(module);
             });
           };
         };

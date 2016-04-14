@@ -31,19 +31,27 @@ var parse = function (recipe) {
 
 var injector = function (injections) {
   var get = function (dep) {
+    if (typeof injections[dep] === 'undefined') {
+      throw 'missing dependency: ' + dep;
+    }
+
     return injections[dep];
   };
 
   return { get: get };
 };
 
-var di = function (recipe, injections) {
+var di = function (recipe, mocks) {
   var factory = parse(recipe);
-  injections.$injector = injector(injections);
+  var fn = factory.fn;
+  var deps = factory.deps;
+  var injections = mocks || {};
 
-  return factory.fn.apply(null, factory.deps.map(function (dep) {
-    return injections[dep];
-  }));
+  if (!injections.$injector) {
+    injections.$injector = injector(injections);
+  }
+
+  return fn.apply(null, deps.map(injections.$injector.get));
 };
 
 module.exports = di;
