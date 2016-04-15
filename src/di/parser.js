@@ -3,7 +3,7 @@
 var args = require('./args');
 var isArray = Array.isArray;
 
-var tokens = function (fn, deps) {
+var validTokens = function (fn, deps) {
   if (typeof fn !== 'function') {
     throw 'invalid injectable function';
   }
@@ -18,19 +18,19 @@ var tokens = function (fn, deps) {
 var inlineArrayParser = function (injectable) {
   var fn = injectable.pop();
   var deps = injectable;
-  return tokens(fn, deps);
+  return validTokens(fn, deps);
 };
 
 var $injectParser = function (injectable) {
   var fn = injectable;
   var deps = fn.$inject;
-  return tokens(fn, deps);
+  return validTokens(fn, deps);
 };
 
 var fnParamParser = function (injectable) {
   var fn = injectable;
   var deps = args(fn);
-  return tokens(fn, deps);
+  return validTokens(fn, deps);
 };
 
 var parser = function (injectable) {
