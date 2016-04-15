@@ -3,7 +3,7 @@
 var expect = require('expect.js');
 var ngMock = require('../src/ng-mock');
 var registry = require('../src/registry');
-var di = require('../src/di');
+var di = require('../src/di/di');
 
 describe('ngMock', function () {
   it('should be exposed as both node module and "angular" global', function () {

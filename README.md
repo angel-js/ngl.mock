@@ -197,7 +197,7 @@ This is used in our unit test to start with a clean registry `beforeEach` test
 
 ### `module(name)`
 
-Returns an [angular.module][1]-compatible API
+Returns an [angular.Module][1]-compatible API
 
 ### `di(injectable, injections)`
 
@@ -206,7 +206,7 @@ DI helper
 References
 ----------
 
-  * [angular.module API][1]
+  * [angular.Module API][1]
 
 [1]: https://docs.angularjs.org/api/ng/type/angular.Module
 [2]: https://mochajs.org/

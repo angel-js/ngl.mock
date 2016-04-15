@@ -2,7 +2,7 @@
   'use strict';
 
   var registry = require('./registry.js');
-  var di = require('./di');
+  var di = require('./di/di');
 
   expose('angular', {
     reset: registry.reset,

@@ -5,11 +5,13 @@ var removeSpaces = function (str) {
 };
 
 var argsDefinition = function (str) {
-  return removeSpaces(str.split(/()/)[1]);
+  return removeSpaces(str.split(/[()]/)[1]);
 };
 
 var args = function (fn) {
-  return argsDefinition(fn.toString()).split(',');
+  var argsStr = argsDefinition(fn.toString());
+  if (!argsStr.length) { return []; }
+  return argsStr.split(',');
 };
 
 module.exports = args;
