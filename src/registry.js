@@ -1,6 +1,7 @@
 'use strict';
 
 var chain = require('./helpers/chain');
+var error = require('./helpers/error');
 var noop = function () {};
 
 var registry = {};
@@ -12,8 +13,8 @@ var reset = function () {
 var getterSetter = function (module, category) {
   return function (key, value) {
     var entry = registry[module];
-    if (!entry) { throw 'module ' + module + ' is not available'; }
-    if (!key) { throw 'missing mandatory ' + category + ' name'; }
+    if (!entry) { throw error('module', module, 'is not available'); }
+    if (!key) { throw error('missing mandatory', category, 'name'); }
 
     if (!entry[category]) { entry[category] = {}; }
     var model = entry[category];
@@ -24,7 +25,7 @@ var getterSetter = function (module, category) {
     }
 
     if (typeof model[key] === 'undefined') {
-      throw category + ' not defined: ' + key;
+      throw error(category, 'not defined:', key);
     }
 
     return model[key];
@@ -32,7 +33,7 @@ var getterSetter = function (module, category) {
 };
 
 var moduleMock = function (name) {
-  if (!name) { throw 'missing mandatory module name'; }
+  if (!name) { throw error('missing mandatory module name'); }
   if (!registry[name]) { registry[name] = {}; }
 
   return chain({

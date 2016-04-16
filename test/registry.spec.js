@@ -25,7 +25,7 @@ describe('registry', function () {
       registry.reset();
 
       expect(factory).withArgs('bar').to.throwException(function (exception) {
-        expect(exception).to.be('module foo is not available');
+        expect(exception.message).to.be('module foo is not available');
       });
     });
   });
@@ -35,7 +35,7 @@ describe('registry', function () {
 
     it('should require a name param', function () {
       expect(registry.module).to.throwException(function (exception) {
-        expect(exception).to.be('missing mandatory module name');
+        expect(exception.message).to.be('missing mandatory module name');
       });
 
       expect(registry.module).withArgs('foo').to.not.throwException();
@@ -117,42 +117,30 @@ describe('registry', function () {
         it('should prevent collisions with each other', function () {
           var module = registry.module('foo');
 
-          var provider = {};
-          var factory = {};
-          var service = {};
-          var value = {};
-          var constant = {};
-          var decorator = {};
-          var animation = {};
-          var filter = {};
-          var controller = {};
-          var directive = {};
-          var component = {};
-
           module
-            .provider('bar', provider)
-            .factory('bar', factory)
-            .service('bar', service)
-            .value('bar', value)
-            .constant('bar', constant)
-            .decorator('bar', decorator)
-            .animation('bar', animation)
-            .filter('bar', filter)
-            .controller('bar', controller)
-            .directive('bar', directive)
-            .component('bar', component);
+            .provider('bar', 'provider')
+            .factory('bar', 'factory')
+            .service('bar', 'service')
+            .value('bar', 'value')
+            .constant('bar', 'constant')
+            .decorator('bar', 'decorator')
+            .animation('bar', 'animation')
+            .filter('bar', 'filter')
+            .controller('bar', 'controller')
+            .directive('bar', 'directive')
+            .component('bar', 'component');
 
-          expect(module.provider('bar')).to.be(provider);
-          expect(module.factory('bar')).to.be(factory);
-          expect(module.service('bar')).to.be(service);
-          expect(module.value('bar')).to.be(value);
-          expect(module.constant('bar')).to.be(constant);
-          expect(module.decorator('bar')).to.be(decorator);
-          expect(module.animation('bar')).to.be(animation);
-          expect(module.filter('bar')).to.be(filter);
-          expect(module.controller('bar')).to.be(controller);
-          expect(module.directive('bar')).to.be(directive);
-          expect(module.component('bar')).to.be(component);
+          expect(module.provider('bar')).to.be('provider');
+          expect(module.factory('bar')).to.be('factory');
+          expect(module.service('bar')).to.be('service');
+          expect(module.value('bar')).to.be('value');
+          expect(module.constant('bar')).to.be('constant');
+          expect(module.decorator('bar')).to.be('decorator');
+          expect(module.animation('bar')).to.be('animation');
+          expect(module.filter('bar')).to.be('filter');
+          expect(module.controller('bar')).to.be('controller');
+          expect(module.directive('bar')).to.be('directive');
+          expect(module.component('bar')).to.be('component');
         });
 
         /**
@@ -167,7 +155,7 @@ describe('registry', function () {
               method('bar', true);
 
               expect(method).to.throwException(function (exception) {
-                expect(exception).to.be('missing mandatory ' + name + ' name');
+                expect(exception.message).to.be('missing mandatory ' + name + ' name');
               });
 
               expect(method).withArgs('bar').to.not.throwException();
@@ -175,9 +163,8 @@ describe('registry', function () {
 
             it('should be a getter/setter', function () {
               var method = registry.module('foo')[name];
-              var bar = {};
-              method('bar', bar);
-              expect(method('bar')).to.be(bar);
+              method('bar', 'qux');
+              expect(method('bar')).to.be('qux');
             });
 
             it('should require a set before a get', function () {
@@ -185,7 +172,7 @@ describe('registry', function () {
 
               expect(method).withArgs('bar')
               .to.throwException(function (exception) {
-                expect(exception).to.be(name + ' not defined: bar');
+                expect(exception.message).to.be(name + ' not defined: bar');
               });
 
               method('bar', true);
@@ -244,7 +231,7 @@ describe('registry', function () {
         it('should be a chainable noop method', function () {
           var module = registry.module('foo');
           expect(module.config()).to.be(module);
-          expect(module.config('bar', true)).to.be(module);
+          expect(module.config('bar', function () {})).to.be(module);
           expect(module.config('bar')).to.be(module);
         });
       });
@@ -253,7 +240,7 @@ describe('registry', function () {
         it('should be a chainable noop method', function () {
           var module = registry.module('foo');
           expect(module.run()).to.be(module);
-          expect(module.run('bar', true)).to.be(module);
+          expect(module.run('bar', function () {})).to.be(module);
           expect(module.run('bar')).to.be(module);
         });
       });

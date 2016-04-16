@@ -1,15 +1,16 @@
 'use strict';
 
 var args = require('./args');
+var error = require('../helpers/error');
 var isArray = Array.isArray;
 
 var validTokens = function (fn, deps) {
   if (typeof fn !== 'function') {
-    throw 'invalid injectable function';
+    throw error('invalid injectable function');
   }
 
   if (!isArray(deps)) {
-    throw 'invalid injectable dependecies';
+    throw error('invalid injectable dependecies');
   }
 
   return { fn: fn, deps: deps };
@@ -46,7 +47,7 @@ var parser = function (injectable) {
     return fnParamParser(injectable);
   }
 
-  throw 'unknown injectable type';
+  throw error('unknown injectable type');
 };
 
 module.exports = parser;

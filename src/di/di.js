@@ -1,11 +1,16 @@
 'use strict';
 
 var parser = require('./parser');
+var error = require('../helpers/error');
 
 var injector = function (injections) {
   var get = function (dep) {
+    if (typeof dep === 'undefined') {
+      throw error('missing mandatory dependency name');
+    }
+
     if (typeof injections[dep] === 'undefined') {
-      throw 'missing dependency: ' + dep;
+      throw error('missing dependency:', dep);
     }
 
     return injections[dep];
@@ -16,7 +21,7 @@ var injector = function (injections) {
 
 var di = function (injectable, injections) {
   if (typeof injectable === 'undefined') {
-    throw 'missing mandatory injectable';
+    throw error('missing mandatory injectable');
   }
 
   var parsed = parser(injectable);
