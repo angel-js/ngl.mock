@@ -19,4 +19,8 @@ describe('error', function () {
   it('should join with spaces multiple arguments', function () {
     expect(error('foo', 'bar', 'qux').message).to.be('foo bar qux');
   });
+
+  it('should create an empty message when called without args', function () {
+    expect(error().message).to.be('');
+  });
 });
