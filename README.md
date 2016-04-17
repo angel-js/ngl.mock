@@ -1,8 +1,9 @@
 ng-mock
 =======
 
-[![Build Status](https://travis-ci.org/pfraces/ng-mock.svg?branch=master)](https://travis-ci.org/pfraces/ng-mock)
 Angular unit testing made easy
+
+[![Build Status](https://travis-ci.org/pfraces/ng-mock.svg?branch=master)](https://travis-ci.org/pfraces/ng-mock)
 
 ### Featuring
 
