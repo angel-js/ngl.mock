@@ -25,7 +25,7 @@ angular.module('log', [])
 
 .factory('log', function (logCache) {
   var log = function (msg) {
-    if (typeof msg !== 'string') { msg = angular.toJson(msg, 2); }
+    if (typeof msg !== 'string') { msg = JSON.stringify(msg, null, 2); }
     logCache.push(msg);
   };
 
@@ -84,7 +84,7 @@ them the same way **since all methods provided by `module` are getter/setters**
 
 ### Use the DI helper for seamless mock injection
 
-Angular lets you declare provider dependencies in 3 different ways:
+Angular lets you declare providers dependencies in 3 different ways:
 
 _from: [angular DI](https://docs.angularjs.org/guide/di)_
 
