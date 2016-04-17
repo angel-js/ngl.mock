@@ -4,6 +4,7 @@
   "description": "Angular unit testing made easy",
   "main": "src/ng-mock.js",
   "devDependencies": {
+    "codeclimate-test-reporter": "^0.3.1",
     "del": "^2.2.0",
     "expect.js": "^0.3.1",
     "gulp": "^3.9.1",
@@ -22,7 +23,8 @@
     "precommit": "npm test",
     "patch": "mversion patch -mn",
     "minor": "mversion minor -mn",
-    "major": "mversion major -mn"
+    "major": "mversion major -mn",
+    "codeclimate": "codeclimate-test-reporter < tmp/coverage/lcov.info"
   },
   "repository": {
     "type": "git",
