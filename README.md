@@ -25,7 +25,6 @@ angular.module('log', [])
 
 .factory('log', function (logCache) {
   var log = function (msg) {
-    if (typeof msg !== 'string') { msg = JSON.stringify(msg, null, 2); }
     logCache.push(msg);
   };
 
