@@ -87,9 +87,9 @@ Angular lets you declare providers dependencies in 3 different ways:
 
 _from: [angular DI](https://docs.angularjs.org/guide/di)_
 
-  * Using the inline array annotation (preferred)
+  * Using the inline array annotation
   * Using the $inject property annotation
-  * Implicitly from the function parameter names (has caveats)
+  * Implicitly from the function parameter names
 
 ```js
 var module = angular.module('foo', []);
