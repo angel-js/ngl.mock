@@ -161,7 +161,7 @@ describe('bar', function () {
 });
 ```
 
-**Shinny unit tests using the DI helper**
+**Shiny unit tests using the DI helper**
 
 ```js
 describe('bar', function () {
