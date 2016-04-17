@@ -6,6 +6,7 @@ Angular unit testing made easy
 [![Build Status](https://travis-ci.org/pfraces/ng-mock.svg?branch=master)](https://travis-ci.org/pfraces/ng-mock)
 [![Test Coverage](https://codeclimate.com/github/pfraces/ng-mock/badges/coverage.svg)](https://codeclimate.com/github/pfraces/ng-mock/coverage)
 [![Code Climate](https://codeclimate.com/github/pfraces/ng-mock/badges/gpa.svg)](https://codeclimate.com/github/pfraces/ng-mock)
+[![Dependency Status](https://gemnasium.com/badges/github.com/pfraces/ng-mock.svg)](https://gemnasium.com/github.com/pfraces/ng-mock)
 
 ### Featuring
 
